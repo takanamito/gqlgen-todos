@@ -16,6 +16,7 @@ require (
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.1 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/lib/pq v1.10.4 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
