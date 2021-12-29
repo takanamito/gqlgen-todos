@@ -23,7 +23,15 @@ func main() {
 	if err := client.Schema.Create(context.Background()); err != nil {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
+
 	//CreateTodos(context.Background(), client)
+	user, err := client.User.Query().Where(user.Name("takanamito")).Only(context.Background())
+	if err != nil {
+		fmt.Errorf("failed querying user: %w", err)
+	}
+
+	QueryTodos(context.Background(), user)
+	QueryTodoUsers(context.Background(), user)
 }
 
 func CreateUser(ctx context.Context, client *ent.Client) (*ent.User, error) {
@@ -101,5 +109,21 @@ func QueryTodos(ctx context.Context, takanamito *ent.User) error {
 		return fmt.Errorf("failed querying user todos: %w", err)
 	}
 	log.Println(todo1)
+	return nil
+}
+
+func QueryTodoUsers(ctx context.Context, takanamito *ent.User) error {
+	todos, err := takanamito.QueryTodos().All(ctx)
+	if err != nil {
+		return fmt.Errorf("failed querying user todods: %w", err)
+	}
+
+	for _, todo := range todos {
+		user, err := todo.QueryUser().Only(ctx)
+		if err != nil {
+			return fmt.Errorf("failed querying todo %q user: %w", todo.Body, err)
+		}
+		log.Printf("todo %q user: %q\n", todo.Body, user.Name)
+	}
 	return nil
 }
