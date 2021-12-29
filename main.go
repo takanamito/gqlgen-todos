@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/takanamito/gqlgen-todos/ent"
+	"github.com/takanamito/gqlgen-todos/ent/todo"
 	"github.com/takanamito/gqlgen-todos/ent/user"
 
 	_ "github.com/lib/pq"
@@ -22,7 +23,7 @@ func main() {
 	if err := client.Schema.Create(context.Background()); err != nil {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
-	CreateTodos(context.Background(), client)
+	//CreateTodos(context.Background(), client)
 }
 
 func CreateUser(ctx context.Context, client *ent.Client) (*ent.User, error) {
@@ -84,4 +85,21 @@ func CreateTodos(ctx context.Context, client *ent.Client) (*ent.User, error) {
 	}
 	log.Println("user was created: ", takanamito)
 	return takanamito, nil
+}
+
+func QueryTodos(ctx context.Context, takanamito *ent.User) error {
+	todos, err := takanamito.QueryTodos().All(ctx)
+	if err != nil {
+		return fmt.Errorf("failed querying user todos: %w", err)
+	}
+	log.Println("returned todos: ", todos)
+
+	todo1, err := takanamito.QueryTodos().
+		Where(todo.Body("掃除をする")).
+		Only(ctx)
+	if err != nil {
+		return fmt.Errorf("failed querying user todos: %w", err)
+	}
+	log.Println(todo1)
+	return nil
 }
