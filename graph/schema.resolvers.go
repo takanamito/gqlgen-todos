@@ -6,7 +6,9 @@ package graph
 import (
 	"context"
 	"fmt"
+	"log"
 
+	"github.com/takanamito/gqlgen-todos/ent"
 	"github.com/takanamito/gqlgen-todos/graph/generated"
 	"github.com/takanamito/gqlgen-todos/graph/model"
 )
@@ -16,7 +18,27 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	client, err := ent.Open("postgres", "host=localhost port=5432 user=admin dbname=todos password=admin sslmode=disable")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Close()
+
+	user, err := client.User.Create().
+		SetAge(input.Age).
+		SetName(input.Name).
+		SetGender(input.Gender).
+		Save(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed creating user: #{err}")
+	}
+
+	return &model.User{
+		ID:     string(user.ID),
+		Name:   user.Name,
+		Age:    user.Age,
+		Gender: user.Gender,
+	}, nil
 }
 
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
