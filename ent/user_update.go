@@ -54,6 +54,27 @@ func (uu *UserUpdate) SetNillableName(s *string) *UserUpdate {
 	return uu
 }
 
+// SetGender sets the "gender" field.
+func (uu *UserUpdate) SetGender(i int) *UserUpdate {
+	uu.mutation.ResetGender()
+	uu.mutation.SetGender(i)
+	return uu
+}
+
+// SetNillableGender sets the "gender" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableGender(i *int) *UserUpdate {
+	if i != nil {
+		uu.SetGender(*i)
+	}
+	return uu
+}
+
+// AddGender adds i to the "gender" field.
+func (uu *UserUpdate) AddGender(i int) *UserUpdate {
+	uu.mutation.AddGender(i)
+	return uu
+}
+
 // AddTodoIDs adds the "todos" edge to the Todo entity by IDs.
 func (uu *UserUpdate) AddTodoIDs(ids ...int) *UserUpdate {
 	uu.mutation.AddTodoIDs(ids...)
@@ -204,6 +225,20 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldName,
 		})
 	}
+	if value, ok := uu.mutation.Gender(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldGender,
+		})
+	}
+	if value, ok := uu.mutation.AddedGender(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldGender,
+		})
+	}
 	if uu.mutation.TodosCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -301,6 +336,27 @@ func (uuo *UserUpdateOne) SetNillableName(s *string) *UserUpdateOne {
 	if s != nil {
 		uuo.SetName(*s)
 	}
+	return uuo
+}
+
+// SetGender sets the "gender" field.
+func (uuo *UserUpdateOne) SetGender(i int) *UserUpdateOne {
+	uuo.mutation.ResetGender()
+	uuo.mutation.SetGender(i)
+	return uuo
+}
+
+// SetNillableGender sets the "gender" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableGender(i *int) *UserUpdateOne {
+	if i != nil {
+		uuo.SetGender(*i)
+	}
+	return uuo
+}
+
+// AddGender adds i to the "gender" field.
+func (uuo *UserUpdateOne) AddGender(i int) *UserUpdateOne {
+	uuo.mutation.AddGender(i)
 	return uuo
 }
 
@@ -476,6 +532,20 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Type:   field.TypeString,
 			Value:  value,
 			Column: user.FieldName,
+		})
+	}
+	if value, ok := uuo.mutation.Gender(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldGender,
+		})
+	}
+	if value, ok := uuo.mutation.AddedGender(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldGender,
 		})
 	}
 	if uuo.mutation.TodosCleared() {

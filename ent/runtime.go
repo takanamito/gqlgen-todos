@@ -21,4 +21,8 @@ func init() {
 	userDescName := userFields[1].Descriptor()
 	// user.DefaultName holds the default value on creation for the name field.
 	user.DefaultName = userDescName.Default.(string)
+	// userDescGender is the schema descriptor for gender field.
+	userDescGender := userFields[2].Descriptor()
+	// user.DefaultGender holds the default value on creation for the gender field.
+	user.DefaultGender = userDescGender.Default.(int)
 }

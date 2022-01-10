@@ -11,6 +11,8 @@ const (
 	FieldAge = "age"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// FieldGender holds the string denoting the gender field in the database.
+	FieldGender = "gender"
 	// EdgeTodos holds the string denoting the todos edge name in mutations.
 	EdgeTodos = "todos"
 	// Table holds the table name of the user in the database.
@@ -29,6 +31,7 @@ var Columns = []string{
 	FieldID,
 	FieldAge,
 	FieldName,
+	FieldGender,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -46,4 +49,6 @@ var (
 	AgeValidator func(int) error
 	// DefaultName holds the default value on creation for the "name" field.
 	DefaultName string
+	// DefaultGender holds the default value on creation for the "gender" field.
+	DefaultGender int
 )

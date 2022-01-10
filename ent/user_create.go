@@ -40,6 +40,20 @@ func (uc *UserCreate) SetNillableName(s *string) *UserCreate {
 	return uc
 }
 
+// SetGender sets the "gender" field.
+func (uc *UserCreate) SetGender(i int) *UserCreate {
+	uc.mutation.SetGender(i)
+	return uc
+}
+
+// SetNillableGender sets the "gender" field if the given value is not nil.
+func (uc *UserCreate) SetNillableGender(i *int) *UserCreate {
+	if i != nil {
+		uc.SetGender(*i)
+	}
+	return uc
+}
+
 // AddTodoIDs adds the "todos" edge to the Todo entity by IDs.
 func (uc *UserCreate) AddTodoIDs(ids ...int) *UserCreate {
 	uc.mutation.AddTodoIDs(ids...)
@@ -130,6 +144,10 @@ func (uc *UserCreate) defaults() {
 		v := user.DefaultName
 		uc.mutation.SetName(v)
 	}
+	if _, ok := uc.mutation.Gender(); !ok {
+		v := user.DefaultGender
+		uc.mutation.SetGender(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -144,6 +162,9 @@ func (uc *UserCreate) check() error {
 	}
 	if _, ok := uc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "name"`)}
+	}
+	if _, ok := uc.mutation.Gender(); !ok {
+		return &ValidationError{Name: "gender", err: errors.New(`ent: missing required field "gender"`)}
 	}
 	return nil
 }
@@ -187,6 +208,14 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldName,
 		})
 		_node.Name = value
+	}
+	if value, ok := uc.mutation.Gender(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldGender,
+		})
+		_node.Gender = value
 	}
 	if nodes := uc.mutation.TodosIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
