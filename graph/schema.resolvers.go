@@ -14,12 +14,16 @@ import (
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
 	todo := &model.Todo{
-		Text: input.Text,
-		ID:   fmt.Sprintf("T%d", rand.Int()),
+		Text:   input.Text,
+		ID:     fmt.Sprintf("T%d", rand.Int()),
 		UserID: input.UserID,
 	}
 	r.todos = append(r.todos, todo)
 	return todo, nil
+}
+
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {

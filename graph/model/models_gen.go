@@ -7,6 +7,12 @@ type NewTodo struct {
 	UserID string `json:"userId"`
 }
 
+type NewUser struct {
+	Age    int    `json:"age"`
+	Name   string `json:"name"`
+	Gender int    `json:"gender"`
+}
+
 type User struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`

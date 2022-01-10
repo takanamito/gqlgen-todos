@@ -23,6 +23,13 @@ input NewTodo {
   userId: String!
 }
 
+input NewUser {
+  age: Int!
+  name: String!
+  gender: Int!
+}
+
 type Mutation {
   createTodo(input: NewTodo!): Todo!
+  createUser(input: NewUser!): User!
 }
