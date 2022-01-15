@@ -6,6 +6,8 @@ package graph
 import (
 	"context"
 	"fmt"
+	"github.com/takanamito/gqlgen-todos/domain/entity"
+	"github.com/takanamito/gqlgen-todos/domain/repository"
 	"log"
 	"strconv"
 	"time"
@@ -64,21 +66,22 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 	}
 	defer client.Close()
 
-	user, err := client.User.Create().
-		SetAge(input.Age).
-		SetName(input.Name).
-		SetGender(input.Gender).
-		Save(ctx)
+	repo := repository.NewUserRepository(client)
+	userEntity := &entity.User{
+		Age:    input.Age,
+		Name:   input.Name,
+		Gender: input.Gender,
+	}
+	userEntity, err = repo.Create(ctx, userEntity)
 	if err != nil {
 		return nil, fmt.Errorf("failed creating user: #{err}", err)
 	}
 
-	log.Println("return user: ", user)
 	return &model.User{
-		ID:     string(user.ID),
-		Name:   user.Name,
-		Age:    user.Age,
-		Gender: user.Gender,
+		ID:     strconv.Itoa(userEntity.ID),
+		Name:   userEntity.Name,
+		Age:    userEntity.Age,
+		Gender: userEntity.Gender,
 	}, nil
 }
 
