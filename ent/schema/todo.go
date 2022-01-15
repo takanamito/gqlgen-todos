@@ -23,7 +23,6 @@ func (Todo) Fields() []ent.Field {
 func (Todo) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("user", User.Type).
-			Ref("todos").
-			Unique(),
+			Ref("todos"),
 	}
 }
