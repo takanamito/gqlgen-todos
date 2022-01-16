@@ -8,14 +8,11 @@ import (
 	"fmt"
 	"github.com/takanamito/gqlgen-todos/domain/entity"
 	"github.com/takanamito/gqlgen-todos/domain/repository"
-	"log"
-	"strconv"
-	"time"
-
 	"github.com/takanamito/gqlgen-todos/ent"
-	"github.com/takanamito/gqlgen-todos/ent/user"
 	"github.com/takanamito/gqlgen-todos/graph/generated"
 	"github.com/takanamito/gqlgen-todos/graph/model"
+	"log"
+	"strconv"
 )
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
@@ -25,17 +22,8 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 	}
 	defer client.Close()
 
-	userId, err := strconv.Atoi(input.UserID)
-	if err != nil {
-		return nil, fmt.Errorf("invalid userId: #{err}", err)
-	}
-	dbUser, err := client.User.Query().Where(user.ID(userId)).Only(ctx)
-
-	todo, err := client.Todo.Create().
-		SetUser(dbUser).
-		SetBody(input.Text).
-		SetCreatedAt(time.Now()).
-		Save(ctx)
+	repo := repository.NewTodoRepository(client)
+	todo, err := repo.Create(ctx, input)
 	if err != nil {
 		return nil, fmt.Errorf("failed creating todo: #{err}", err)
 	}
