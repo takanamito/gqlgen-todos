@@ -6,13 +6,14 @@ package graph
 import (
 	"context"
 	"fmt"
+	"log"
+	"strconv"
+
 	"github.com/takanamito/gqlgen-todos/domain/entity"
 	"github.com/takanamito/gqlgen-todos/domain/repository"
 	"github.com/takanamito/gqlgen-todos/ent"
 	"github.com/takanamito/gqlgen-todos/graph/generated"
 	"github.com/takanamito/gqlgen-todos/graph/model"
-	"log"
-	"strconv"
 )
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
@@ -41,8 +42,8 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 	}
 
 	return &model.Todo{
-		ID:     strconv.Itoa(todo.ID),
-		Text:   todo.Body,
+		ID:   strconv.Itoa(todo.ID),
+		Text: todo.Body,
 		User: &user,
 	}, nil
 }
@@ -73,7 +74,15 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 	}, nil
 }
 
+func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) Todo(ctx context.Context, id string) (*model.Todo, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
