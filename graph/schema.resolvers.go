@@ -75,7 +75,24 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 }
 
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	client, err := ent.Open("postgres", "host=localhost port=5432 user=admin dbname=todos password=admin sslmode=disable")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Close()
+
+	repo := repository.NewUserRepository(client)
+	userModel, err := repo.Find(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query user: #{err}", err)
+	}
+
+	return &model.User{
+		ID: strconv.Itoa(userModel.ID),
+		Name: userModel.Name,
+		Age: userModel.Age,
+		Gender: userModel.Gender,
+	}, nil
 }
 
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
