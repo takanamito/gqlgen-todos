@@ -15,4 +15,5 @@ require (
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.1 // indirect
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
+	github.com/rs/cors v1.8.2 // indirect
 )
